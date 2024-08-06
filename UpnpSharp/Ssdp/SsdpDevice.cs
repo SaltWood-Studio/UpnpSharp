@@ -9,17 +9,28 @@ namespace UpnpSharp.Ssdp
 {
     public class SsdpDevice
     {
-        IPAddress host;
-        ushort port;
+        public IPAddress Address { get; protected set; }
+        public ushort Port { get; protected set; }
+        public string? Description { get; protected set; }
         string response;
 
         public SsdpDevice(IPEndPoint address, string message)
         {
-            this.host = address.Address;
-            this.port = (ushort)address.Port;
+            this.Address = address.Address;
+            this.Port = (ushort)address.Port;
             this.response = message;
 
-            this.GetDescription()
+            HttpPacketParser parser = new HttpPacketParser(message);
+
+            this.GetDescription(parser["Location"]).Wait();
+        }
+
+        public async Task<string?> GetDescription(string? url)
+        {
+            HttpClient client = new HttpClient();
+            var response = await client.GetAsync(url);
+            this.Description = await response.Content.ReadAsStringAsync();
+            return this.Description;
         }
     }
 }

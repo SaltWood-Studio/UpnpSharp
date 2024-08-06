@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,5 +30,14 @@ namespace UpnpSharp
             }
             this.Payload = packet.Split("\r\n\r\n", 2).Last();
         }
+
+        public string? GetHeaderValue(string key)
+        {
+            // 使用不区分大小写的比较器查找键
+            var headerKey = this.Headers.Keys.FirstOrDefault(k => k.Equals(key, StringComparison.OrdinalIgnoreCase));
+            return headerKey != null ? this.Headers[headerKey] : null;
+        }
+
+        public string? this[string key] => this.GetHeaderValue(key);
     }
 }

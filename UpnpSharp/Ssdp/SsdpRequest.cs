@@ -47,7 +47,7 @@ namespace UpnpSharp.Ssdp
             }
 
             this.client.Client.ReceiveTimeout = delay;
-            this.Send(this.RawRequest);
+            return this.Send(this.RawRequest);
         }
 
         public IEnumerable<SsdpDevice> Send(string message)
