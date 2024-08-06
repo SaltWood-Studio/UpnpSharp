@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UpnpSharp
+namespace UpnpSharp.Upnp
 {
     internal class Upnp
     {
@@ -13,9 +13,12 @@ namespace UpnpSharp
         /// </summary>
         /// <param name="delay"></param>
         /// <returns></returns>
-        public IEnumerable<UpnpDevice> Discover(int delay = 1)
+        public IEnumerable<UpnpDevice> Discover(int delay = 1000)
         {
+            foreach (var device in ssdp.MSearch(delay = delay, st = "upnp:rootdevice"))
+            {
 
+            }
         }
     }
 }
