@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace UpnpSharp.Ssdp
 {
@@ -23,6 +24,7 @@ namespace UpnpSharp.Ssdp
             HttpPacketParser parser = new HttpPacketParser(message);
 
             this.GetDescription(parser["Location"]).Wait();
+            this.RequestType().Wait();
         }
 
         public async Task<string?> GetDescription(string? url)
@@ -32,5 +34,16 @@ namespace UpnpSharp.Ssdp
             this.Description = await response.Content.ReadAsStringAsync();
             return this.Description;
         }
+
+        public async Task RequestType()
+        {
+            XmlSerializer xml = new XmlSerializer(typeof(DeviceXml));
+
+        }
+    }
+
+    public class DeviceXml
+    {
+
     }
 }

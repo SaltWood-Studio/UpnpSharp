@@ -8,6 +8,6 @@ namespace UpnpSharp
 {
     internal class Utils
     {
-        public 
+
     }
 }
