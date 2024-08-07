@@ -8,6 +8,6 @@ namespace UpnpSharp.Ssdp
 {
     public class Ssdp
     {
-
+        
     }
 }

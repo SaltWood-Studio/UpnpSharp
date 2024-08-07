@@ -25,7 +25,7 @@ namespace UpnpSharp
             for (int i = 1; i < temp.Length; i++)
             {
                 if ((splittedPacket[i]) == string.Empty) break;
-                string[] keyValuePair = splittedPacket[i].Split(':', StringSplitOptions.TrimEntries);
+                string[] keyValuePair = splittedPacket[i].Split(':', 2, StringSplitOptions.TrimEntries);
                 this.Headers.Add(keyValuePair[0], keyValuePair[1]);
             }
             this.Payload = packet.Split("\r\n\r\n", 2).Last();

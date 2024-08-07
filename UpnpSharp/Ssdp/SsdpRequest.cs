@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -8,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace UpnpSharp.Ssdp
 {
-    public class SsdpRequest
+    public class SsdpRequest : IDisposable
     {
-        private UdpClient client;
         const uint mcastAddress = 0xfaffffef;
         const ushort ssdpPort = 1900;
+        protected UdpClient client;
+        protected bool disposed;
 
         public SsdpRequest()
         {
@@ -35,8 +37,9 @@ namespace UpnpSharp.Ssdp
         public IEnumerable<SsdpDevice> MSearch(int delay = 1000, string st = "ssdp:all", IDictionary<string, string>? headers = null)
         {
             this.RequestMethod = "M-SEARCH";
-            this.Headers["MAN"] = "ssdp:discover";
-            this.Headers["MX"] = delay.ToString();
+            this.Headers["HOST"] = $"239.255.255.250:{ssdpPort}";
+            this.Headers["MAN"] = "\"ssdp:discover\"";
+            this.Headers["MX"] = (delay / 1000).ToString();
             this.Headers["ST"] = st;
             if (headers != null)
             {
@@ -70,6 +73,36 @@ namespace UpnpSharp.Ssdp
                 }
             }
             return devices;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    this.client.Close();
+                    this.client.Dispose();
+                }
+
+                // TODO: 释放未托管的资源(未托管的对象)并重写终结器
+                // TODO: 将大型字段设置为 null
+                disposed = true;
+            }
+        }
+
+        // // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
+        ~SsdpRequest()
+        {
+            // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
