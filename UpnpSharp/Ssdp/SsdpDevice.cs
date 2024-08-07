@@ -17,7 +17,13 @@ namespace UpnpSharp.Ssdp
         public SsdpXml? SsdpDeviceInfo { get; protected set; }
         public string? FriendlyName => this.SsdpDeviceInfo?.Device.FriendlyName;
         public string? Type => this.SsdpDeviceInfo?.Device.DeviceType;
-        public SsdpDeviceServiceXml? Services => this.SsdpDeviceInfo?.Device.ServiceList;
+        public IEnumerable<SsdpDeviceService>? Services => GetServices();
+
+        public IEnumerable<SsdpDeviceService>? GetServices()
+        {
+            return this.SsdpDeviceInfo?.Device.GetServices();
+        }
+
         public string? BaseUrl => this.SsdpDeviceInfo?.Device.UrlBase != null ? this.SsdpDeviceInfo.Device.UrlBase : this.parser["Location"];
 
         string response;
@@ -61,9 +67,6 @@ namespace UpnpSharp.Ssdp
             return string.Format(format, this.FriendlyName, this.Description, this.Type, this.SsdpDeviceInfo?.Device.ModelName, this.SsdpDeviceInfo?.Device.ModelNumber);
         }
 
-        //public var this[string id]
-        //{
-        //    get => this.SsdpDeviceInfo.Device.ServiceList.Service.
-        //}
+        public SsdpDeviceService? this[string id] => this.Services?.Where(service => service.ServiceId.Split(':')[3] == id).FirstOrDefault();
     }
 }

@@ -70,6 +70,28 @@ namespace UpnpSharp.Ssdp
 
         [XmlElement(ElementName = "presentationURL")]
         public string PresentationURL { get; set; } = string.Empty;
+
+        public IEnumerable<SsdpDeviceService> GetServices()
+        {
+            return GetServices(this);
+        }
+
+        public IEnumerable<SsdpDeviceService> GetServices(SsdpDeviceXml? xml)
+        {
+            var thisService = xml?.ServiceList.Service;
+            if (!string.IsNullOrWhiteSpace(thisService?.ServiceType)) yield return thisService; 
+            SsdpDeviceXml[]? subDevices = xml?.DeviceList.Devices;
+            if (subDevices != null)
+            {
+                foreach (var device in subDevices)
+                {
+                    foreach (var service in GetServices(device))
+                    {
+                        yield return service;
+                    }
+                }
+            }
+        }
     }
 
     /// <remarks/>
