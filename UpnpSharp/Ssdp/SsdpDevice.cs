@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -24,7 +20,7 @@ namespace UpnpSharp.Ssdp
             return this.SsdpDeviceInfo?.Device.GetServices();
         }
 
-        public string? BaseUrl => this.SsdpDeviceInfo?.Device.UrlBase != null ? this.SsdpDeviceInfo.Device.UrlBase : this.parser["Location"];
+        public string? BaseUrl => string.IsNullOrWhiteSpace(this.SsdpDeviceInfo?.Device.UrlBase) ? this.parser["Location"] : this.SsdpDeviceInfo?.Device.UrlBase;
 
         string response;
         protected HttpPacketParser parser;
@@ -39,6 +35,7 @@ namespace UpnpSharp.Ssdp
 
             this.GetDescription(this.parser["Location"]).Wait();
             this.ParseXml();
+            this.SsdpDeviceInfo.Device.GetServices().Select(service => new SsdpService(BaseUrl, service)).ToList();
         }
 
         public async Task<string?> GetDescription(string? url)

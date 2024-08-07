@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using UpnpSharp.Ssdp;
+﻿using UpnpSharp.Ssdp;
 
 namespace UpnpSharp.Upnp
 {
@@ -32,7 +26,7 @@ namespace UpnpSharp.Upnp
                 yield return device;
             }
         }
-        
+
         public SsdpDevice? GetIgd()
         {
             List<SsdpDevice> igds = new List<SsdpDevice>();

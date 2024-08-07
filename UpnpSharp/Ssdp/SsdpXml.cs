@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace UpnpSharp.Ssdp
 {
@@ -44,7 +39,7 @@ namespace UpnpSharp.Ssdp
         public string ModelName { get; set; } = string.Empty;
 
         [XmlElement(ElementName = "modelNumber")]
-        public byte ModelNumber { get; set; }
+        public string ModelNumber { get; set; } = string.Empty;
 
         [XmlElement(ElementName = "modelURL")]
         public string ModelUrl { get; set; } = string.Empty;
@@ -59,10 +54,10 @@ namespace UpnpSharp.Ssdp
         public string UrlBase { get; set; } = string.Empty;
 
         [XmlElement(ElementName = "UPC")]
-        public byte Upc { get; set; }
+        public string Upc { get; set; }
 
         [XmlElement(ElementName = "serviceList")]
-        public SsdpDeviceServiceXml ServiceList { get; set; } = new();
+        public SsdpDeviceServiceList ServiceList { get; set; } = new();
 
         /// <remarks/>
         [XmlElement(ElementName = "deviceList")]
@@ -79,7 +74,7 @@ namespace UpnpSharp.Ssdp
         public IEnumerable<SsdpDeviceService> GetServices(SsdpDeviceXml? xml)
         {
             var thisService = xml?.ServiceList.Service;
-            if (!string.IsNullOrWhiteSpace(thisService?.ServiceType)) yield return thisService; 
+            if (!string.IsNullOrWhiteSpace(thisService?.ServiceType)) yield return thisService;
             SsdpDeviceXml[]? subDevices = xml?.DeviceList.Devices;
             if (subDevices != null)
             {
@@ -109,7 +104,7 @@ namespace UpnpSharp.Ssdp
     [Serializable]
     [System.ComponentModel.DesignerCategory("code")]
     [XmlType(AnonymousType = true, Namespace = "urn:schemas-upnp-org:device-1-0")]
-    public partial class SsdpDeviceServiceXml
+    public partial class SsdpDeviceServiceList
     {
         [XmlElement(ElementName = "service")]
         public SsdpDeviceService Service { get; set; } = new SsdpDeviceService();
